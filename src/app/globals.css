@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Base theme variables */
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
@@ -10,8 +11,6 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 262.1 83.3% 57.8%;
-  --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 47.4% 11.2%;
   --muted: 210 40% 96.1%;
@@ -22,12 +21,76 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 262.1 83.3% 57.8%;
   --radius: 0.5rem;
   --sidebar-width: 240px;
   --sidebar-width-collapsed: 64px;
 }
 
+/* Purple Theme (Default) */
+:root,
+[data-theme="purple"] {
+  --primary: 262.1 83.3% 57.8%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 262.1 83.3% 57.8%;
+}
+
+/* Blue Theme */
+[data-theme="blue"] {
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 221.2 83.2% 53.3%;
+}
+
+/* Green Theme */
+[data-theme="green"] {
+  --primary: 142.1 76.2% 36.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 142.1 76.2% 36.3%;
+}
+
+/* Orange Theme */
+[data-theme="orange"] {
+  --primary: 24.6 95% 53.1%;
+  --primary-foreground: 60 9.1% 97.8%;
+  --ring: 24.6 95% 53.1%;
+}
+
+/* Red Theme */
+[data-theme="red"] {
+  --primary: 0 72.2% 50.6%;
+  --primary-foreground: 0 85.7% 97.3%;
+  --ring: 0 72.2% 50.6%;
+}
+
+/* Pink Theme */
+[data-theme="pink"] {
+  --primary: 330.4 81.2% 60.4%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 330.4 81.2% 60.4%;
+}
+
+/* Teal Theme */
+[data-theme="teal"] {
+  --primary: 172.5 66.7% 35.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 172.5 66.7% 35.3%;
+}
+
+/* Indigo Theme */
+[data-theme="indigo"] {
+  --primary: 238.7 83.5% 66.7%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 238.7 83.5% 66.7%;
+}
+
+/* Cyan Theme */
+[data-theme="cyan"] {
+  --primary: 188.7 94.5% 42.7%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 188.7 94.5% 42.7%;
+}
+
+/* Dark mode base */
 .dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
@@ -35,8 +98,6 @@
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
-  --primary: 263.4 70% 50.4%;
-  --primary-foreground: 210 40% 98%;
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
   --muted: 217.2 32.6% 17.5%;
@@ -47,7 +108,70 @@
   --destructive-foreground: 210 40% 98%;
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
+}
+
+/* Purple Theme Dark */
+.dark[data-theme="purple"],
+.dark[data-theme="purple"] {
+  --primary: 263.4 70% 50.4%;
+  --primary-foreground: 210 40% 98%;
   --ring: 263.4 70% 50.4%;
+}
+
+/* Blue Theme Dark */
+.dark[data-theme="blue"] {
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --ring: 217.2 91.2% 59.8%;
+}
+
+/* Green Theme Dark */
+.dark[data-theme="green"] {
+  --primary: 142.1 70.6% 45.3%;
+  --primary-foreground: 144.9 80.4% 10%;
+  --ring: 142.1 70.6% 45.3%;
+}
+
+/* Orange Theme Dark */
+.dark[data-theme="orange"] {
+  --primary: 20.5 90.2% 48.2%;
+  --primary-foreground: 60 9.1% 97.8%;
+  --ring: 20.5 90.2% 48.2%;
+}
+
+/* Red Theme Dark */
+.dark[data-theme="red"] {
+  --primary: 0 72.2% 50.6%;
+  --primary-foreground: 0 85.7% 97.3%;
+  --ring: 0 72.2% 50.6%;
+}
+
+/* Pink Theme Dark */
+.dark[data-theme="pink"] {
+  --primary: 330.4 81.2% 60.4%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 330.4 81.2% 60.4%;
+}
+
+/* Teal Theme Dark */
+.dark[data-theme="teal"] {
+  --primary: 172.5 66.7% 35.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 172.5 66.7% 35.3%;
+}
+
+/* Indigo Theme Dark */
+.dark[data-theme="indigo"] {
+  --primary: 238.7 83.5% 66.7%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 238.7 83.5% 66.7%;
+}
+
+/* Cyan Theme Dark */
+.dark[data-theme="cyan"] {
+  --primary: 188.7 94.5% 42.7%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --ring: 188.7 94.5% 42.7%;
 }
 
 @theme inline {
@@ -176,3 +300,14 @@
 .status-warning {
   @apply bg-amber-500;
 }
+
+/* Color theme preview dots */
+.theme-dot-purple { background: hsl(262.1 83.3% 57.8%); }
+.theme-dot-blue { background: hsl(221.2 83.2% 53.3%); }
+.theme-dot-green { background: hsl(142.1 76.2% 36.3%); }
+.theme-dot-orange { background: hsl(24.6 95% 53.1%); }
+.theme-dot-red { background: hsl(0 72.2% 50.6%); }
+.theme-dot-pink { background: hsl(330.4 81.2% 60.4%); }
+.theme-dot-teal { background: hsl(172.5 66.7% 35.3%); }
+.theme-dot-indigo { background: hsl(238.7 83.5% 66.7%); }
+.theme-dot-cyan { background: hsl(188.7 94.5% 42.7%); }

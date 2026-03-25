@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inspector } from 'react-dev-inspector';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider, ColorThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: {
@@ -41,8 +41,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {isDev && <Inspector />}
-          {children}
+          <ColorThemeProvider>
+            {isDev && <Inspector />}
+            {children}
+          </ColorThemeProvider>
         </ThemeProvider>
       </body>
     </html>

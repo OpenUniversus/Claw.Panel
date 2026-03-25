@@ -14,6 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
+import { ColorThemeSwitcher } from '@/components/color-theme-switcher';
 
 interface HeaderProps {
   title?: string;
@@ -46,7 +47,10 @@ export function Header({ title }: HeaderProps) {
 
       {/* Right Actions */}
       <div className="flex items-center gap-2">
-        {/* Theme Toggle */}
+        {/* Color Theme Switcher */}
+        <ColorThemeSwitcher />
+
+        {/* Theme Toggle (Light/Dark) */}
         {mounted && (
           <Button
             variant="ghost"
