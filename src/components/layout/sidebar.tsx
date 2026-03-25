@@ -22,6 +22,8 @@ import {
   Cpu,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   FolderOpen,
   Terminal,
   Shield,
@@ -37,59 +39,90 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface NavItem {
   name: string;
-  href: string;
+  href?: string;
   icon: React.ElementType;
   badge?: number;
   children?: NavItem[];
 }
 
-const mainNavItems: NavItem[] = [
-  { name: '概览', href: '/', icon: LayoutDashboard },
-  { name: '应用商店', href: '/apps', icon: Store },
-  { name: '网站', href: '/websites', icon: Globe },
-  { name: '数据库', href: '/databases', icon: Database },
-  { name: '容器', href: '/containers', icon: Container },
-  { name: '文件管理', href: '/files', icon: FolderOpen },
-  { name: '节点管理', href: '/nodes', icon: Network },
-  { name: '系统监控', href: '/monitor', icon: Activity },
-  { name: 'WAF 防火墙', href: '/waf', icon: Shield },
+interface NavCategory {
+  title: string;
+  icon: React.ElementType;
+  items: NavItem[];
+}
+
+const navCategories: NavCategory[] = [
+  {
+    title: '概览',
+    icon: LayoutDashboard,
+    items: [
+      { name: '仪表盘', href: '/', icon: LayoutDashboard },
+    ],
+  },
+  {
+    title: '应用管理',
+    icon: Store,
+    items: [
+      { name: '应用商店', href: '/apps', icon: Store },
+      { name: '网站管理', href: '/websites', icon: Globe },
+      { name: '数据库', href: '/databases', icon: Database },
+      { name: '容器管理', href: '/containers', icon: Container },
+      { name: '文件管理', href: '/files', icon: FolderOpen },
+    ],
+  },
+  {
+    title: 'AI 模块',
+    icon: Brain,
+    items: [
+      { name: 'AI 概览', href: '/ai', icon: Brain },
+      { name: '模型管理', href: '/ai/models', icon: Cpu },
+      { name: 'OpenClaw', href: '/ai/openclaw', icon: Bot },
+      { name: 'Ollama', href: '/ai/ollama', icon: Cpu },
+      { name: 'AI 对话', href: '/ai/chat', icon: MessageSquare },
+      { name: 'Agent 管理', href: '/ai/agents', icon: Bot },
+      { name: '通道管理', href: '/ai/channels', icon: Radio },
+      { name: '技能中心', href: '/ai/skills', icon: Zap },
+      { name: '工作流', href: '/ai/workflows', icon: Workflow },
+      { name: 'GPU 监控', href: '/ai/gpu', icon: Activity },
+    ],
+  },
+  {
+    title: '集群管理',
+    icon: Network,
+    items: [
+      { name: '节点管理', href: '/nodes', icon: Network },
+      { name: '系统监控', href: '/monitor', icon: Activity },
+      { name: 'WAF 防火墙', href: '/waf', icon: Shield },
+    ],
+  },
+  {
+    title: '系统工具',
+    icon: Wrench,
+    items: [
+      { name: '计划任务', href: '/cronjobs', icon: Clock },
+      { name: '终端', href: '/terminal', icon: Terminal },
+      { name: '工具箱', href: '/toolbox', icon: Wrench },
+      { name: '日志审计', href: '/logs', icon: FileText },
+      { name: '安全设置', href: '/security', icon: Shield },
+      { name: '面板设置', href: '/settings', icon: Settings },
+    ],
+  },
 ];
 
-const aiNavItems: NavItem[] = [
-  { name: 'AI 概览', href: '/ai', icon: Brain },
-  { name: '模型管理', href: '/ai/models', icon: Cpu },
-  { name: 'OpenClaw', href: '/ai/openclaw', icon: Bot },
-  { name: 'Ollama', href: '/ai/ollama', icon: Cpu },
-  { name: 'AI 对话', href: '/ai/chat', icon: MessageSquare },
-  { name: 'Agent 管理', href: '/ai/agents', icon: Bot },
-  { name: '通道管理', href: '/ai/channels', icon: Radio },
-  { name: '技能中心', href: '/ai/skills', icon: Zap },
-  { name: '工作流', href: '/ai/workflows', icon: Workflow },
-  { name: 'GPU 监控', href: '/ai/gpu', icon: Activity },
-];
-
-const systemNavItems: NavItem[] = [
-  { name: '计划任务', href: '/cronjobs', icon: Clock },
-  { name: '终端', href: '/terminal', icon: Terminal },
-  { name: '工具箱', href: '/toolbox', icon: Wrench },
-  { name: '日志审计', href: '/logs', icon: FileText },
-  { name: '安全设置', href: '/security', icon: Shield },
-  { name: '面板设置', href: '/settings', icon: Settings },
-];
-
-function NavItemLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
+function NavItemLink({ item, collapsed, level = 0 }: { item: NavItem; collapsed: boolean; level?: number }) {
   const pathname = usePathname();
-  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+  const isActive = item.href && (pathname === item.href || pathname.startsWith(item.href + '/'));
 
   if (collapsed) {
     return (
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
           <Link
-            href={item.href}
+            href={item.href || '#'}
             className={cn(
               'flex items-center justify-center w-full h-10 rounded-lg transition-colors',
               isActive
@@ -109,15 +142,16 @@ function NavItemLink({ item, collapsed }: { item: NavItem; collapsed: boolean })
 
   return (
     <Link
-      href={item.href}
+      href={item.href || '#'}
       className={cn(
         'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium',
+        level > 0 && 'pl-9 text-xs',
         isActive
           ? 'bg-primary/10 text-primary'
           : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
       )}
     >
-      <item.icon className="h-5 w-5 flex-shrink-0" />
+      <item.icon className={cn('flex-shrink-0', level > 0 ? 'h-4 w-4' : 'h-5 w-5')} />
       <span className="truncate">{item.name}</span>
       {item.badge !== undefined && (
         <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">
@@ -128,31 +162,101 @@ function NavItemLink({ item, collapsed }: { item: NavItem; collapsed: boolean })
   );
 }
 
-function NavSection({
-  title,
-  items,
+function NavCategorySection({
+  category,
   collapsed,
+  expandedCategories,
+  toggleCategory,
 }: {
-  title: string;
-  items: NavItem[];
+  category: NavCategory;
   collapsed: boolean;
+  expandedCategories: Set<string>;
+  toggleCategory: (title: string) => void;
 }) {
+  const pathname = usePathname();
+  const isExpanded = expandedCategories.has(category.title);
+  const hasActiveChild = category.items.some(
+    (item) => item.href && (pathname === item.href || pathname.startsWith(item.href + '/'))
+  );
+
+  if (collapsed) {
+    return (
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => toggleCategory(category.title)}
+            className={cn(
+              'flex items-center justify-center w-full h-10 rounded-lg transition-colors',
+              hasActiveChild
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+            )}
+          >
+            <category.icon className="h-5 w-5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="font-medium">
+          {category.title}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
     <div className="space-y-1">
-      {!collapsed && (
-        <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2">
-          {title}
-        </h3>
+      <button
+        onClick={() => toggleCategory(category.title)}
+        className={cn(
+          'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium w-full',
+          hasActiveChild
+            ? 'bg-primary/5 text-foreground'
+            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+        )}
+      >
+        <category.icon className="h-5 w-5 flex-shrink-0" />
+        <span className="truncate flex-1 text-left">{category.title}</span>
+        {isExpanded ? (
+          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        )}
+      </button>
+      {isExpanded && (
+        <div className="space-y-1 pl-2 border-l ml-4">
+          {category.items.map((item) => (
+            <NavItemLink key={item.href || item.name} item={item} collapsed={collapsed} level={1} />
+          ))}
+        </div>
       )}
-      {items.map((item) => (
-        <NavItemLink key={item.href} item={item} collapsed={collapsed} />
-      ))}
     </div>
   );
 }
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => {
+    // 默认展开包含当前页面的分类
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    const expanded = new Set<string>();
+    navCategories.forEach((category) => {
+      if (category.items.some((item) => item.href && pathname.startsWith(item.href))) {
+        expanded.add(category.title);
+      }
+    });
+    return expanded;
+  });
+
+  const toggleCategory = (title: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(title)) {
+        next.delete(title);
+      } else {
+        next.add(title);
+      }
+      return next;
+    });
+  };
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -182,11 +286,19 @@ export function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-          <NavSection title="运维管理" items={mainNavItems} collapsed={collapsed} />
-          <NavSection title="AI 模块" items={aiNavItems} collapsed={collapsed} />
-          <NavSection title="系统管理" items={systemNavItems} collapsed={collapsed} />
-        </nav>
+        <ScrollArea className="flex-1 py-4 px-3">
+          <nav className="space-y-2">
+            {navCategories.map((category) => (
+              <NavCategorySection
+                key={category.title}
+                category={category}
+                collapsed={collapsed}
+                expandedCategories={expandedCategories}
+                toggleCategory={toggleCategory}
+              />
+            ))}
+          </nav>
+        </ScrollArea>
 
         {/* Collapse Toggle */}
         <div className="border-t p-2">
