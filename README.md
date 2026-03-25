@@ -364,3 +364,6 @@ export const useStore = create<Store>((set) => ({
 # Claw.Panel
 # Claw.Panel
 # Claw.Panel
+v2026.03.25-1
+初始化 Claw.Panel 智能运维面板
+主要功能实现： - 概览页面：系统状态、资源监控、AI服务状态 - 应用商店：应用浏览、安装管理 - 网站管理：网站配置、SSL证书管理 - 数据库管理：MySQL/PostgreSQL/Redis管理、备份恢复 - 容器管理：Docker容器、镜像、网络、存储卷 - 计划任务：Cron任务管理 - 日志审计：系统日志查看与分析 - 面板设置：外观、安全、备份配置。
