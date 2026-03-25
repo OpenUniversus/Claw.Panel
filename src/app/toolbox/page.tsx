@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { AppLayout } from '@/components/layout/layout-client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import {
   Calculator,
   Hash,
@@ -18,8 +20,12 @@ import {
   Copy,
   Check,
   ArrowRightLeft,
-  Download,
-  Upload,
+  Key,
+  QrCode,
+  Link2,
+  Regex,
+  Binary,
+  Palette,
 } from 'lucide-react';
 import { useClipboard } from '@/hooks/use-common';
 
@@ -389,94 +395,213 @@ function TimestampConverter() {
 
 export default function ToolboxPage() {
   return (
-    <div className="space-y-6">
-      {/* 页头 */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">工具箱</h1>
-        <p className="text-muted-foreground">常用运维工具集合</p>
-      </div>
+    <AppLayout title="工具箱">
+      <div className="space-y-6">
+        {/* 页头 */}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">工具箱</h1>
+          <p className="text-muted-foreground">常用运维工具集合</p>
+        </div>
 
-      {/* 工具列表 */}
-      <Tabs defaultValue="format" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
-          <TabsTrigger value="format">格式化</TabsTrigger>
-          <TabsTrigger value="encode">编码转换</TabsTrigger>
-          <TabsTrigger value="generate">生成器</TabsTrigger>
-          <TabsTrigger value="convert">单位换算</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="format" className="space-y-6">
-          <ToolCard
-            title="JSON 格式化"
-            description="格式化或压缩 JSON 数据"
-            icon={<Code className="h-5 w-5" />}
-          >
-            <JsonFormatter />
-          </ToolCard>
-        </TabsContent>
-
-        <TabsContent value="encode" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <ToolCard
-              title="Base64 编解码"
-              description="文本与 Base64 互转"
-              icon={<Lock className="h-5 w-5" />}
-            >
-              <Base64Tool />
-            </ToolCard>
-
-            <ToolCard
-              title="URL 编解码"
-              description="URL 编码与解码"
-              icon={<FileText className="h-5 w-5" />}
-            >
-              <Base64Tool />
-            </ToolCard>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="generate" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <ToolCard
-              title="Hash 生成器"
-              description="生成多种 Hash 值"
-              icon={<Hash className="h-5 w-5" />}
-            >
-              <HashGenerator />
-            </ToolCard>
-
-            <ToolCard
-              title="时间戳转换"
-              description="Unix 时间戳与日期互转"
-              icon={<Calculator className="h-5 w-5" />}
-            >
-              <TimestampConverter />
-            </ToolCard>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="convert" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <ToolCard
-              title="存储单位转换"
-              description="B、KB、MB、GB、TB 等单位换算"
-              icon={<GitBranch className="h-5 w-5" />}
-            >
-              <UnitConverter />
-            </ToolCard>
-
-            <ToolCard
-              title="数字进制转换"
-              description="二进制、八进制、十进制、十六进制互转"
-              icon={<Calculator className="h-5 w-5" />}
-            >
-              <div className="text-center py-8 text-muted-foreground">
-                功能开发中...
+        {/* 统计卡片 */}
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-primary/10 p-2">
+                  <Code className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">格式化</p>
+                  <p className="text-xl font-bold">2</p>
+                </div>
               </div>
-            </ToolCard>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-violet-500/10 p-2">
+                  <Lock className="h-5 w-5 text-violet-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">编码转换</p>
+                  <p className="text-xl font-bold">4</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-amber-500/10 p-2">
+                  <Hash className="h-5 w-5 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">生成器</p>
+                  <p className="text-xl font-bold">4</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-emerald-500/10 p-2">
+                  <Calculator className="h-5 w-5 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">单位换算</p>
+                  <p className="text-xl font-bold">3</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 工具列表 */}
+        <Tabs defaultValue="format" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+            <TabsTrigger value="format">格式化</TabsTrigger>
+            <TabsTrigger value="encode">编码转换</TabsTrigger>
+            <TabsTrigger value="generate">生成器</TabsTrigger>
+            <TabsTrigger value="convert">单位换算</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="format" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <ToolCard
+                title="JSON 格式化"
+                description="格式化或压缩 JSON 数据"
+                icon={<Code className="h-5 w-5" />}
+              >
+                <JsonFormatter />
+              </ToolCard>
+              <ToolCard
+                title="正则表达式测试"
+                description="测试和调试正则表达式"
+                icon={<Regex className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="encode" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <ToolCard
+                title="Base64 编解码"
+                description="文本与 Base64 互转"
+                icon={<Lock className="h-5 w-5" />}
+              >
+                <Base64Tool />
+              </ToolCard>
+
+              <ToolCard
+                title="URL 编解码"
+                description="URL 编码与解码"
+                icon={<Link2 className="h-5 w-5" />}
+              >
+                <Base64Tool />
+              </ToolCard>
+
+              <ToolCard
+                title="进制转换"
+                description="二进制、八进制、十进制、十六进制互转"
+                icon={<Binary className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+
+              <ToolCard
+                title="HTML 实体转换"
+                description="HTML 实体与字符互转"
+                icon={<FileText className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="generate" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <ToolCard
+                title="Hash 生成器"
+                description="生成多种 Hash 值"
+                icon={<Hash className="h-5 w-5" />}
+              >
+                <HashGenerator />
+              </ToolCard>
+
+              <ToolCard
+                title="时间戳转换"
+                description="Unix 时间戳与日期互转"
+                icon={<Calculator className="h-5 w-5" />}
+              >
+                <TimestampConverter />
+              </ToolCard>
+
+              <ToolCard
+                title="密码生成器"
+                description="生成安全的随机密码"
+                icon={<Key className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+
+              <ToolCard
+                title="UUID 生成器"
+                description="生成 UUID / GUID"
+                icon={<QrCode className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="convert" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <ToolCard
+                title="存储单位转换"
+                description="B、KB、MB、GB、TB 等单位换算"
+                icon={<GitBranch className="h-5 w-5" />}
+              >
+                <UnitConverter />
+              </ToolCard>
+
+              <ToolCard
+                title="颜色转换"
+                description="HEX、RGB、HSL 等颜色格式互转"
+                icon={<Palette className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+
+              <ToolCard
+                title="数字进制转换"
+                description="二进制、八进制、十进制、十六进制互转"
+                icon={<Calculator className="h-5 w-5" />}
+              >
+                <div className="text-center py-8 text-muted-foreground">
+                  功能开发中...
+                </div>
+              </ToolCard>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </AppLayout>
   );
 }
