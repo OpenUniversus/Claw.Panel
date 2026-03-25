@@ -25,6 +25,9 @@ import {
   FolderOpen,
   Terminal,
   Shield,
+  Activity,
+  Server,
+  Network,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -50,6 +53,9 @@ const mainNavItems: NavItem[] = [
   { name: '数据库', href: '/databases', icon: Database },
   { name: '容器', href: '/containers', icon: Container },
   { name: '文件管理', href: '/files', icon: FolderOpen },
+  { name: '节点管理', href: '/nodes', icon: Network },
+  { name: '系统监控', href: '/monitor', icon: Activity },
+  { name: 'WAF 防火墙', href: '/waf', icon: Shield },
 ];
 
 const aiNavItems: NavItem[] = [
