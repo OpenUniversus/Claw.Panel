@@ -1,0 +1,11 @@
+[project]
+entrypoint = "cmd/main.go"
+requires = ["go-1.21"]
+
+[dev]
+build = ["go", "mod", "download"]
+run = ["go", "run", "./cmd"]
+
+[deploy]
+build = ["go", "build", "-o", "clawpanel", "./cmd"]
+run = ["./clawpanel"]
