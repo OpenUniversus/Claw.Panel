@@ -68,6 +68,7 @@ const aiNavItems: NavItem[] = [
   { name: '通道管理', href: '/ai/channels', icon: Radio },
   { name: '技能中心', href: '/ai/skills', icon: Zap },
   { name: '工作流', href: '/ai/workflows', icon: Workflow },
+  { name: 'GPU 监控', href: '/ai/gpu', icon: Activity },
 ];
 
 const systemNavItems: NavItem[] = [
