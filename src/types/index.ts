@@ -216,7 +216,9 @@ export interface LogEntry {
 export interface AIModel {
   id: string;
   name: string;
+  displayName?: string;
   provider: 'openai' | 'anthropic' | 'google' | 'deepseek' | 'ollama' | 'custom';
+  type?: 'chat' | 'image' | 'audio' | 'embedding';
   apiKey?: string;
   baseUrl?: string;
   models: string[];
@@ -224,6 +226,10 @@ export interface AIModel {
   enabled: boolean;
   healthStatus?: 'healthy' | 'unhealthy' | 'unknown';
   latencyMs?: number;
+  contextWindow?: number;
+  maxOutput?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface OpenClawStatus {
@@ -268,6 +274,7 @@ export interface AIAgent {
   temperature: number;
   maxTokens: number;
   enabled: boolean;
+  tools?: string[];
   channels: string[];
   skills: string[];
   createdAt: string;
