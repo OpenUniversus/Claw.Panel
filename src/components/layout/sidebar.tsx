@@ -31,7 +31,7 @@ import {
   Server,
   Network,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -52,7 +52,7 @@ interface NavItem {
 interface NavCategory {
   title: string;
   icon: React.ElementType;
-  href?: string; // 如果有href，则是一个直接链接，不是展开分类
+  href?: string;
   items?: NavItem[];
 }
 
@@ -60,7 +60,7 @@ const navCategories: NavCategory[] = [
   {
     title: '概览',
     icon: LayoutDashboard,
-    href: '/', // 直接链接，不需要展开
+    href: '/',
   },
   {
     title: '应用管理',
@@ -161,6 +161,46 @@ function NavItemLink({ item, collapsed, level = 0 }: { item: NavItem; collapsed:
   );
 }
 
+// 可展开菜单组件，带动画效果
+function ExpandableMenu({
+  category,
+  isExpanded,
+  collapsed,
+}: {
+  category: NavCategory;
+  isExpanded: boolean;
+  collapsed: boolean;
+}) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const scrollHeight = contentRef.current.scrollHeight;
+      setHeight(isExpanded ? scrollHeight : 0);
+    }
+  }, [isExpanded]);
+
+  if (!category.items) return null;
+
+  if (collapsed) {
+    return null;
+  }
+
+  return (
+    <div
+      className="overflow-hidden transition-all duration-300 ease-in-out"
+      style={{ height: height !== undefined ? `${height}px` : 'auto' }}
+    >
+      <div ref={contentRef} className="space-y-1 pl-2 border-l ml-4 pt-1">
+        {category.items.map((item) => (
+          <NavItemLink key={item.href || item.name} item={item} collapsed={collapsed} level={1} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function NavCategorySection({
   category,
   collapsed,
@@ -173,11 +213,11 @@ function NavCategorySection({
   toggleCategory: (title: string) => void;
 }) {
   const pathname = usePathname();
-  
+
   // 如果是直接链接（如概览）
   if (category.href) {
     const isActive = pathname === category.href;
-    
+
     if (collapsed) {
       return (
         <Tooltip delayDuration={0}>
@@ -259,19 +299,20 @@ function NavCategorySection({
       >
         <category.icon className="h-5 w-5 flex-shrink-0" />
         <span className="truncate flex-1 text-left">{category.title}</span>
-        {isExpanded ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
-        ) : (
+        <div
+          className={cn(
+            'transition-transform duration-300 ease-in-out',
+            isExpanded ? 'rotate-180' : 'rotate-0'
+          )}
+        >
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        )}
-      </button>
-      {isExpanded && category.items && (
-        <div className="space-y-1 pl-2 border-l ml-4">
-          {category.items.map((item) => (
-            <NavItemLink key={item.href || item.name} item={item} collapsed={collapsed} level={1} />
-          ))}
         </div>
-      )}
+      </button>
+      <ExpandableMenu
+        category={category}
+        isExpanded={isExpanded}
+        collapsed={collapsed}
+      />
     </div>
   );
 }
