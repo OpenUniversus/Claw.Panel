@@ -52,16 +52,15 @@ interface NavItem {
 interface NavCategory {
   title: string;
   icon: React.ElementType;
-  items: NavItem[];
+  href?: string; // 如果有href，则是一个直接链接，不是展开分类
+  items?: NavItem[];
 }
 
 const navCategories: NavCategory[] = [
   {
     title: '概览',
     icon: LayoutDashboard,
-    items: [
-      { name: '仪表盘', href: '/', icon: LayoutDashboard },
-    ],
+    href: '/', // 直接链接，不需要展开
   },
   {
     title: '应用管理',
@@ -115,7 +114,7 @@ const navCategories: NavCategory[] = [
 
 function NavItemLink({ item, collapsed, level = 0 }: { item: NavItem; collapsed: boolean; level?: number }) {
   const pathname = usePathname();
-  const isActive = item.href && (pathname === item.href || pathname.startsWith(item.href + '/'));
+  const isActive = item.href && (pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/')));
 
   if (collapsed) {
     return (
@@ -174,8 +173,53 @@ function NavCategorySection({
   toggleCategory: (title: string) => void;
 }) {
   const pathname = usePathname();
+  
+  // 如果是直接链接（如概览）
+  if (category.href) {
+    const isActive = pathname === category.href;
+    
+    if (collapsed) {
+      return (
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Link
+              href={category.href}
+              className={cn(
+                'flex items-center justify-center w-full h-10 rounded-lg transition-colors',
+                isActive
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+              )}
+            >
+              <category.icon className="h-5 w-5" />
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="font-medium">
+            {category.title}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
+
+    return (
+      <Link
+        href={category.href}
+        className={cn(
+          'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium',
+          isActive
+            ? 'bg-primary/10 text-primary'
+            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+        )}
+      >
+        <category.icon className="h-5 w-5 flex-shrink-0" />
+        <span className="truncate">{category.title}</span>
+      </Link>
+    );
+  }
+
+  // 可展开分类
   const isExpanded = expandedCategories.has(category.title);
-  const hasActiveChild = category.items.some(
+  const hasActiveChild = category.items?.some(
     (item) => item.href && (pathname === item.href || pathname.startsWith(item.href + '/'))
   );
 
@@ -221,7 +265,7 @@ function NavCategorySection({
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         )}
       </button>
-      {isExpanded && (
+      {isExpanded && category.items && (
         <div className="space-y-1 pl-2 border-l ml-4">
           {category.items.map((item) => (
             <NavItemLink key={item.href || item.name} item={item} collapsed={collapsed} level={1} />
@@ -239,7 +283,7 @@ export function Sidebar() {
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
     const expanded = new Set<string>();
     navCategories.forEach((category) => {
-      if (category.items.some((item) => item.href && pathname.startsWith(item.href))) {
+      if (category.items?.some((item) => item.href && pathname.startsWith(item.href))) {
         expanded.add(category.title);
       }
     });
