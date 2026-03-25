@@ -22,6 +22,9 @@ import {
   Cpu,
   ChevronLeft,
   ChevronRight,
+  FolderOpen,
+  Terminal,
+  Shield,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -46,6 +49,7 @@ const mainNavItems: NavItem[] = [
   { name: '网站', href: '/websites', icon: Globe },
   { name: '数据库', href: '/databases', icon: Database },
   { name: '容器', href: '/containers', icon: Container },
+  { name: '文件管理', href: '/files', icon: FolderOpen },
 ];
 
 const aiNavItems: NavItem[] = [
@@ -62,8 +66,10 @@ const aiNavItems: NavItem[] = [
 
 const systemNavItems: NavItem[] = [
   { name: '计划任务', href: '/cronjobs', icon: Clock },
+  { name: '终端', href: '/terminal', icon: Terminal },
   { name: '工具箱', href: '/toolbox', icon: Wrench },
   { name: '日志审计', href: '/logs', icon: FileText },
+  { name: '安全设置', href: '/security', icon: Shield },
   { name: '面板设置', href: '/settings', icon: Settings },
 ];
 
