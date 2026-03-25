@@ -367,3 +367,6 @@ export const useStore = create<Store>((set) => ({
 v2026.03.25-1
 初始化 Claw.Panel 智能运维面板
 主要功能实现： - 概览页面：系统状态、资源监控、AI服务状态 - 应用商店：应用浏览、安装管理 - 网站管理：网站配置、SSL证书管理 - 数据库管理：MySQL/PostgreSQL/Redis管理、备份恢复 - 容器管理：Docker容器、镜像、网络、存储卷 - 计划任务：Cron任务管理 - 日志审计：系统日志查看与分析 - 面板设置：外观、安全、备份配置。
+v2026.03.25-2
+研发优化 - API服务层、组件复用、AI模块页面、登录系统
+主要改进: - 创建统一的API服务层 (src/lib/api.ts) - 添加通用 Hooks 库 (src/hooks/use-common.ts) - 创建可复用组件: 对话框、数据表格、加载骨架屏 - 新增 AI 模型管理页面 (/ai/models) - 新增 AI Agent 管理页面 (/ai/agents) - 实现后端 API 路由 (dashboard, containers, ai/chat) - 新增工具箱页面 (/toolbox) - 新增登录页面 (/login) - 添加性能优化工具 (src/lib/performance.ts) - 更新类型定义支持新功能。
