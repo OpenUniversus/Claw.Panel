@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/clawpanel/backend/internal/handlers"
 	"github.com/clawpanel/backend/internal/models"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,7 @@ func init() {
 // 测试健康检查
 func TestHealthCheck(t *testing.T) {
 	router := gin.New()
-	router.GET("/health", HealthCheck)
+	router.GET("/health", handlers.HealthCheck)
 
 	req, _ := http.NewRequest("GET", "/health", nil)
 	w := httptest.NewRecorder()
@@ -36,7 +37,7 @@ func TestHealthCheck(t *testing.T) {
 // 测试登录 - 成功
 func TestLoginSuccess(t *testing.T) {
 	router := gin.New()
-	router.POST("/auth/login", Login)
+	router.POST("/auth/login", handlers.Login)
 
 	loginReq := models.LoginRequest{
 		Username: "admin",
@@ -60,7 +61,7 @@ func TestLoginSuccess(t *testing.T) {
 // 测试登录 - 失败（错误密码）
 func TestLoginFailure(t *testing.T) {
 	router := gin.New()
-	router.POST("/auth/login", Login)
+	router.POST("/auth/login", handlers.Login)
 
 	loginReq := models.LoginRequest{
 		Username: "admin",
@@ -85,7 +86,7 @@ func TestLoginFailure(t *testing.T) {
 // 测试登录 - 缺少参数
 func TestLoginMissingParams(t *testing.T) {
 	router := gin.New()
-	router.POST("/auth/login", Login)
+	router.POST("/auth/login", handlers.Login)
 
 	loginReq := models.LoginRequest{
 		Username: "",
@@ -104,7 +105,7 @@ func TestLoginMissingParams(t *testing.T) {
 // 测试获取仪表盘状态
 func TestGetDashboardStatus(t *testing.T) {
 	router := gin.New()
-	router.GET("/dashboard/status", GetDashboardStatus)
+	router.GET("/dashboard/status", handlers.GetDashboardStatus)
 
 	req, _ := http.NewRequest("GET", "/dashboard/status", nil)
 	w := httptest.NewRecorder()
@@ -128,7 +129,7 @@ func TestGetDashboardStatus(t *testing.T) {
 // 测试获取资源历史
 func TestGetResourceHistory(t *testing.T) {
 	router := gin.New()
-	router.GET("/dashboard/resources", GetResourceHistory)
+	router.GET("/dashboard/resources", handlers.GetResourceHistory)
 
 	req, _ := http.NewRequest("GET", "/dashboard/resources", nil)
 	w := httptest.NewRecorder()
@@ -150,7 +151,7 @@ func TestGetResourceHistory(t *testing.T) {
 // 测试列出容器
 func TestListContainers(t *testing.T) {
 	router := gin.New()
-	router.GET("/containers", ListContainers)
+	router.GET("/containers", handlers.ListContainers)
 
 	req, _ := http.NewRequest("GET", "/containers", nil)
 	w := httptest.NewRecorder()
@@ -172,7 +173,7 @@ func TestListContainers(t *testing.T) {
 // 测试列出镜像
 func TestListImages(t *testing.T) {
 	router := gin.New()
-	router.GET("/containers/images", ListImages)
+	router.GET("/containers/images", handlers.ListImages)
 
 	req, _ := http.NewRequest("GET", "/containers/images", nil)
 	w := httptest.NewRecorder()
@@ -189,10 +190,10 @@ func TestListImages(t *testing.T) {
 // 测试容器操作
 func TestContainerOperations(t *testing.T) {
 	router := gin.New()
-	router.POST("/containers/:id/start", StartContainer)
-	router.POST("/containers/:id/stop", StopContainer)
-	router.POST("/containers/:id/restart", RestartContainer)
-	router.DELETE("/containers/:id", RemoveContainer)
+	router.POST("/containers/:id/start", handlers.StartContainer)
+	router.POST("/containers/:id/stop", handlers.StopContainer)
+	router.POST("/containers/:id/restart", handlers.RestartContainer)
+	router.DELETE("/containers/:id", handlers.RemoveContainer)
 
 	tests := []struct {
 		method string
@@ -221,8 +222,8 @@ func TestContainerOperations(t *testing.T) {
 // 测试 AI 模型相关接口
 func TestAIModels(t *testing.T) {
 	router := gin.New()
-	router.GET("/ai/models", ListAIModels)
-	router.POST("/ai/models", AddAIModel)
+	router.GET("/ai/models", handlers.ListAIModels)
+	router.POST("/ai/models", handlers.AddAIModel)
 
 	// 测试列出模型
 	req, _ := http.NewRequest("GET", "/ai/models", nil)
@@ -263,8 +264,8 @@ func TestAIModels(t *testing.T) {
 // 测试 AI Agent 相关接口
 func TestAIAgents(t *testing.T) {
 	router := gin.New()
-	router.GET("/ai/agents", ListAIAgents)
-	router.POST("/ai/agents", CreateAIAgent)
+	router.GET("/ai/agents", handlers.ListAIAgents)
+	router.POST("/ai/agents", handlers.CreateAIAgent)
 
 	// 测试列出智能体
 	req, _ := http.NewRequest("GET", "/ai/agents", nil)
@@ -306,8 +307,8 @@ func TestAIAgents(t *testing.T) {
 // 测试网站相关接口
 func TestWebsites(t *testing.T) {
 	router := gin.New()
-	router.GET("/websites", ListWebsites)
-	router.POST("/websites", CreateWebsite)
+	router.GET("/websites", handlers.ListWebsites)
+	router.POST("/websites", handlers.CreateWebsite)
 
 	// 测试列出网站
 	req, _ := http.NewRequest("GET", "/websites", nil)
@@ -325,7 +326,7 @@ func TestWebsites(t *testing.T) {
 // 测试数据库相关接口
 func TestDatabases(t *testing.T) {
 	router := gin.New()
-	router.GET("/databases", ListDatabases)
+	router.GET("/databases", handlers.ListDatabases)
 
 	req, _ := http.NewRequest("GET", "/databases", nil)
 	w := httptest.NewRecorder()
@@ -342,7 +343,7 @@ func TestDatabases(t *testing.T) {
 // 测试计划任务相关接口
 func TestCronJobs(t *testing.T) {
 	router := gin.New()
-	router.GET("/cronjobs", ListCronJobs)
+	router.GET("/cronjobs", handlers.ListCronJobs)
 
 	req, _ := http.NewRequest("GET", "/cronjobs", nil)
 	w := httptest.NewRecorder()
@@ -359,7 +360,7 @@ func TestCronJobs(t *testing.T) {
 // 测试应用商店相关接口
 func TestApps(t *testing.T) {
 	router := gin.New()
-	router.GET("/apps", ListApps)
+	router.GET("/apps", handlers.ListApps)
 
 	req, _ := http.NewRequest("GET", "/apps", nil)
 	w := httptest.NewRecorder()
@@ -376,7 +377,7 @@ func TestApps(t *testing.T) {
 // 测试日志相关接口
 func TestLogs(t *testing.T) {
 	router := gin.New()
-	router.GET("/logs", ListLogs)
+	router.GET("/logs", handlers.ListLogs)
 
 	req, _ := http.NewRequest("GET", "/logs", nil)
 	w := httptest.NewRecorder()
@@ -393,7 +394,7 @@ func TestLogs(t *testing.T) {
 // 测试设置相关接口
 func TestSettings(t *testing.T) {
 	router := gin.New()
-	router.GET("/settings", GetSettings)
+	router.GET("/settings", handlers.GetSettings)
 
 	req, _ := http.NewRequest("GET", "/settings", nil)
 	w := httptest.NewRecorder()
@@ -410,10 +411,10 @@ func TestSettings(t *testing.T) {
 // 测试 AI 聊天（非流式）
 func TestChatCompletionNonStream(t *testing.T) {
 	router := gin.New()
-	router.POST("/ai/chat/completions", ChatCompletion)
+	router.POST("/ai/chat/completions", handlers.ChatCompletion)
 
-	chatReq := ChatRequest{
-		Messages: []ChatMessage{
+	chatReq := handlers.ChatRequest{
+		Messages: []handlers.ChatMessage{
 			{Role: "user", Content: "你好"},
 		},
 		Model:  "gpt-4o",
