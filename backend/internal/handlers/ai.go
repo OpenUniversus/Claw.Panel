@@ -12,6 +12,70 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// OpenClaw 状态
+type OpenClawStatus struct {
+	Running   bool   `json:"running"`
+	Version   string `json:"version"`
+	Uptime    int64  `json:"uptime"`
+	MemoryMB  int    `json:"memoryMB"`
+	Edition   string `json:"edition"`
+	Endpoint  string `json:"endpoint"`
+}
+
+// Ollama 模型
+type OllamaModel struct {
+	Name   string `json:"name"`
+	Size   string `json:"size"`
+	Status string `json:"status"`
+}
+
+// Ollama 状态
+type OllamaStatus struct {
+	Running  bool          `json:"running"`
+	Version  string        `json:"version"`
+	Models   []OllamaModel `json:"models"`
+	BaseURL  string        `json:"baseUrl"`
+}
+
+// GetOpenClawStatus 获取 OpenClaw 状态
+func GetOpenClawStatus(c *gin.Context) {
+	// 模拟 OpenClaw 状态
+	status := OpenClawStatus{
+		Running:  true,
+		Version:  "1.0.0",
+		Uptime:   86400,
+		MemoryMB: 256,
+		Edition:  "Community",
+		Endpoint: "http://localhost:8080",
+	}
+
+	c.JSON(http.StatusOK, models.APIResponse{
+		Success: true,
+		Data:    status,
+	})
+}
+
+// GetOllamaStatus 获取 Ollama 状态
+func GetOllamaStatus(c *gin.Context) {
+	// 模拟 Ollama 状态
+	status := OllamaStatus{
+		Running: true,
+		Version: "0.1.26",
+		Models: []OllamaModel{
+			{Name: "llama3:70b", Size: "42 GB", Status: "loaded"},
+			{Name: "llama3:8b", Size: "4.7 GB", Status: "available"},
+			{Name: "mistral:7b", Size: "4.1 GB", Status: "available"},
+			{Name: "qwen2:7b", Size: "4.4 GB", Status: "available"},
+		},
+		BaseURL: "http://localhost:11434",
+	}
+
+	c.JSON(http.StatusOK, models.APIResponse{
+		Success: true,
+		Data:    status,
+	})
+}
+
 // 模拟 AI 模型数据
 var mockAIModels = []models.AIModel{
 	{

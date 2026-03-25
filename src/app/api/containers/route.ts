@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// 模拟容器数据
+// 后端服务地址
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+
+// 模拟容器数据（作为后备）
 const mockContainers = [
   {
     id: 'container-1',
@@ -126,6 +129,28 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
 
+  // 尝试代理到后端
+  try {
+    const endpoint = type === 'images' ? '/containers/images' : '/containers';
+    const backendUrl = `${BACKEND_URL}/api${endpoint}`;
+    
+    const response = await fetch(backendUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return NextResponse.json(data);
+    }
+  } catch (error) {
+    console.log('Backend unavailable, using mock data:', error);
+  }
+
+  // 后端不可用时使用模拟数据
   if (type === 'images') {
     return NextResponse.json({
       success: true,
@@ -142,11 +167,63 @@ export async function GET(request: NextRequest) {
 // POST - 容器操作
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { action } = body;
+  const { action, containerId } = body;
 
-  // 模拟操作成功
+  // 尝试代理到后端
+  try {
+    const backendUrl = `${BACKEND_URL}/api/containers/${containerId}/${action}`;
+    
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return NextResponse.json(data);
+    }
+  } catch (error) {
+    console.log('Backend unavailable:', error);
+  }
+
+  // 后端不可用时返回模拟响应
   return NextResponse.json({
     success: true,
     message: `Container ${action} successfully`,
+  });
+}
+
+// DELETE - 删除容器
+export async function DELETE(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const containerId = searchParams.get('id');
+
+  // 尝试代理到后端
+  try {
+    const backendUrl = `${BACKEND_URL}/api/containers/${containerId}`;
+    
+    const response = await fetch(backendUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return NextResponse.json(data);
+    }
+  } catch (error) {
+    console.log('Backend unavailable:', error);
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: 'Container deleted successfully',
   });
 }

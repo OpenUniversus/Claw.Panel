@@ -1,32 +1,90 @@
 import { NextRequest } from 'next/server';
 
+// 后端服务地址
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+
 // 模拟 AI 聊天流式响应
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { messages, model, stream = true } = body;
 
-  if (!stream) {
-    // 非流式响应
-    return new Response(
-      JSON.stringify({
-        success: true,
-        data: {
-          content: '这是一个模拟的 AI 响应。在实际应用中，这里会调用真实的 AI 模型 API。',
-          model,
-          usage: {
-            promptTokens: 50,
-            completionTokens: 30,
-            totalTokens: 80,
-          },
+  // 尝试代理到后端
+  if (stream) {
+    try {
+      const backendUrl = `${BACKEND_URL}/api/ai/chat/completions`;
+      
+      const response = await fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      }),
-      {
-        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, model, stream: true }),
+        signal: AbortSignal.timeout(60000), // 流式请求超时 60 秒
+      });
+
+      if (response.ok && response.body) {
+        // 直接转发流式响应
+        return new Response(response.body, {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+          },
+        });
       }
-    );
+    } catch (error) {
+      console.log('Backend unavailable, using mock streaming:', error);
+    }
+
+    // 后端不可用时使用模拟流式响应
+    return mockStreamResponse(messages, model);
   }
 
-  // 流式响应
+  // 非流式请求
+  try {
+    const backendUrl = `${BACKEND_URL}/api/ai/chat/completions`;
+    
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ messages, model, stream: false }),
+      signal: AbortSignal.timeout(30000),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return new Response(JSON.stringify(data), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  } catch (error) {
+    console.log('Backend unavailable, using mock response:', error);
+  }
+
+  // 后端不可用时返回模拟响应
+  return new Response(
+    JSON.stringify({
+      success: true,
+      data: {
+        content: generateMockResponse(messages),
+        model,
+        usage: {
+          promptTokens: 50,
+          completionTokens: 100,
+          totalTokens: 150,
+        },
+      },
+    }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+}
+
+// 模拟流式响应
+function mockStreamResponse(messages: Array<{ role: string; content: string }>, model: string) {
   const encoder = new TextEncoder();
   const responseText = generateMockResponse(messages);
 

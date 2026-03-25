@@ -594,17 +594,17 @@ export function getMockChatSessions(): ChatSession[] {
 
 // 模拟日志条目
 export function getMockLogs(): LogEntry[] {
-  const now = Date.now();
+  // 使用固定的时间戳字符串避免 hydration 不匹配
   return [
-    { id: '1', level: 'info', source: 'system', message: '面板启动成功', timestamp: new Date(now - 3600000).toISOString() },
-    { id: '2', level: 'info', source: 'container', message: '容器 nginx-proxy 重启完成', timestamp: new Date(now - 3500000).toISOString() },
-    { id: '3', level: 'warn', source: 'monitor', message: '容器 mysql-db 内存使用率超过 80%', timestamp: new Date(now - 3400000).toISOString() },
-    { id: '4', level: 'info', source: 'ai', message: 'OpenClaw 连接成功', timestamp: new Date(now - 3300000).toISOString() },
-    { id: '5', level: 'error', source: 'backup', message: '数据库备份失败：磁盘空间不足', timestamp: new Date(now - 3200000).toISOString() },
-    { id: '6', level: 'info', source: 'ssl', message: 'SSL证书 example.com 已自动续期', timestamp: new Date(now - 3100000).toISOString() },
-    { id: '7', level: 'info', source: 'cronjob', message: '计划任务 "数据库自动备份" 执行完成', timestamp: new Date(now - 3000000).toISOString() },
-    { id: '8', level: 'info', source: 'user', message: '用户 admin 登录成功', timestamp: new Date(now - 2900000).toISOString() },
-    { id: '9', level: 'warn', source: 'security', message: '检测到异常登录尝试，IP: 192.168.1.200', timestamp: new Date(now - 2800000).toISOString() },
-    { id: '10', level: 'info', source: 'update', message: '面板更新检查：当前已是最新版本', timestamp: new Date(now - 2700000).toISOString() },
+    { id: '1', level: 'info', source: 'system', message: '面板启动成功', timestamp: '20:00:00' },
+    { id: '2', level: 'info', source: 'container', message: '容器 nginx-proxy 重启完成', timestamp: '20:05:00' },
+    { id: '3', level: 'warn', source: 'monitor', message: '容器 mysql-db 内存使用率超过 80%', timestamp: '20:10:00' },
+    { id: '4', level: 'info', source: 'ai', message: 'OpenClaw 连接成功', timestamp: '20:15:00' },
+    { id: '5', level: 'error', source: 'backup', message: '数据库备份失败：磁盘空间不足', timestamp: '20:20:00' },
+    { id: '6', level: 'info', source: 'ssl', message: 'SSL证书 example.com 已自动续期', timestamp: '20:25:00' },
+    { id: '7', level: 'info', source: 'cronjob', message: '计划任务 "数据库自动备份" 执行完成', timestamp: '20:30:00' },
+    { id: '8', level: 'info', source: 'user', message: '用户 admin 登录成功', timestamp: '20:35:00' },
+    { id: '9', level: 'warn', source: 'security', message: '检测到异常登录尝试，IP: 192.168.1.200', timestamp: '20:40:00' },
+    { id: '10', level: 'info', source: 'update', message: '面板更新检查：当前已是最新版本', timestamp: '20:45:00' },
   ];
 }

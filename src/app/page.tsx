@@ -179,15 +179,12 @@ function LogItem({ log }: { log: { level: string; source: string; message: strin
     }
   };
 
-  const time = new Date(log.timestamp).toLocaleTimeString('zh-CN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
+  // 使用固定格式避免 hydration 不匹配
+  const timeStr = log.timestamp;
 
   return (
     <div className="flex items-start gap-3 py-2">
-      <span className="text-xs text-muted-foreground w-20 flex-shrink-0">{time}</span>
+      <span className="text-xs text-muted-foreground w-20 flex-shrink-0">{timeStr}</span>
       <Badge variant="outline" className={cn('text-xs', getLevelColor(log.level))}>
         {log.level.toUpperCase()}
       </Badge>

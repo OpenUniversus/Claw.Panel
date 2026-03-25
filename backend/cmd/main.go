@@ -78,6 +78,8 @@ func main() {
 		auth.DELETE("/apps/:id", handlers.UninstallApp)
 
 		// AI 模块
+		auth.GET("/ai/openclaw/status", handlers.GetOpenClawStatus)
+		auth.GET("/ai/ollama/status", handlers.GetOllamaStatus)
 		auth.GET("/ai/models", handlers.ListAIModels)
 		auth.POST("/ai/models", handlers.AddAIModel)
 		auth.PUT("/ai/models/:id", handlers.UpdateAIModel)
