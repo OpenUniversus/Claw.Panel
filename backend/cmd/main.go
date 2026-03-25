@@ -96,6 +96,28 @@ func main() {
 		// 系统设置
 		auth.GET("/settings", handlers.GetSettings)
 		auth.PUT("/settings", handlers.UpdateSettings)
+
+		// WebSocket 实时监控
+		auth.GET("/ws/monitor", handlers.SystemMonitor)
+		auth.GET("/ws/logs", handlers.LogStreamWS)
+		auth.GET("/ws/terminal", handlers.TerminalWS)
+
+		// 文件管理
+		auth.GET("/files", handlers.ListFiles)
+		auth.GET("/files/read", handlers.ReadFile)
+		auth.POST("/files/write", handlers.WriteFile)
+
+		// 用户管理
+		auth.GET("/users", handlers.ListUsers)
+		auth.POST("/users", handlers.CreateUser)
+		auth.PUT("/users/:id", handlers.UpdateUser)
+		auth.DELETE("/users/:id", handlers.DeleteUser)
+
+		// 备份管理
+		auth.GET("/backups", handlers.ListBackups)
+		auth.POST("/backups", handlers.CreateBackup)
+		auth.POST("/backups/:id/restore", handlers.RestoreBackup)
+		auth.DELETE("/backups/:id", handlers.DeleteBackup)
 	}
 
 	// 获取端口
